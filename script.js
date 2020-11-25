@@ -22,9 +22,9 @@ function welcomeStage() {
     
     let textContainer = addElement('div', null, null, "textContainer", chatboxContainer);
 
-    let welcomeText = addElement('h2', null, null, null, textContainer);
+    let welcomeText = addElement('p', null, null, null, textContainer);
     welcomeText.innerHTML = "Good afternoon, Welcome to Far2Kleen :D";
-    let welcomeText2 = addElement('h2', null, null, null, textContainer);
+    let welcomeText2 = addElement('p', null, null, null, textContainer);
     welcomeText2.innerHTML = "Are you interested in any of the following?";
 
     // Buttons to choose service
@@ -457,7 +457,7 @@ function getPermission() {
     noButton.innerHTML = 'No';
     noButton.addEventListener('click', function() {
         if(!document.getElementById('nameErrorText')) {
-            let nameErrorText = addElement('h2', null, null, nameErrorText, chatboxContainer);
+            let nameErrorText = addElement('p', null, null, nameErrorText, chatboxContainer);
             nameErrorText.innerHTML = "To move further with your enquiry, you must accept our privacy policy.";
         }
     });
@@ -599,11 +599,13 @@ function clearStageShowText(chatboxContainer, text) {
     while(chatboxContainer.firstChild) {
         chatboxContainer.removeChild(chatboxContainer.lastChild);
     }
-
-    let textContainer = addElement('div', null, null, "textContainer", chatboxContainer);
-    let enquiryText = addElement('h2', null, null, null, textContainer);
-    enquiryText.innerHTML = text;
-}
+	if(text && text != null) {
+		let textContainer = addElement('div', null, null, "textContainer", chatboxContainer);
+		let enquiryText = addElement('p', null, null, null, textContainer);
+		enquiryText.innerHTML = text;
+	}
+	
+	}
 
 // Start
 welcomeStage();
