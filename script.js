@@ -2,12 +2,24 @@ let customerName = "";
 let chosenStage = "";
 let optionStage = "";
 let vechicleName = "";
+let acceptedPermission = false;
 let customerEmail = "";
 let customerNumber;
 let customerEnquiry = "";
+let shownSections = [];
 
 function welcomeStage() {
+    shownSections.push('welcomeStage');
+    if(document.getElementById('backButton')) {
+        document.getElementById('backButton').style.display = 'none';
+    }
+    if(document.getElementById('resetButton')) {
+        document.getElementById('resetButton').style.display = 'none';
+    }
     let chatboxContainer = document.getElementById('chatboxContainer');
+
+    clearStageShowText(chatboxContainer, null);
+    
     let textContainer = addElement('div', null, null, "textContainer", chatboxContainer);
 
     let welcomeText = addElement('h2', null, null, null, textContainer);
@@ -68,7 +80,7 @@ function welcomeStage() {
     let shopOurProductsButton = addElement('button', null, 'welcomeButton', 'shopOurProductsButton', buttonContainer);
     shopOurProductsButton.innerHTML = 'Shop Our Products';
     shopOurProductsButton.addEventListener('click', function() {
-        window.location.href = 'https://f2kcare.com';
+        window.open('https://f2kcare.com', '_blank');
     });
 
     let sendGeneralEnquiryButton = addElement('button', null, 'welcomeButton', 'sendGeneralEnquiryButton', buttonContainer);
@@ -79,22 +91,30 @@ function welcomeStage() {
 }
 
 function getNameStage(button) {
-    chosenStage = button.innerHTML;
+    shownSections.push('getNameStage');
+    document.getElementById('backButton').style.display = 'inline-block';
+    document.getElementById('resetButton').style.display = 'inline-block';
+    if(button && button != null) {
+        chosenStage = button.id;
+    }
     let chatboxContainer = document.getElementById('chatboxContainer');
 
     clearStageShowText(chatboxContainer, "May I ask your name, please?");
 
     // Enter name
     let inputNameBox = addElement('input', 'text', null, 'inputNameBox', chatboxContainer);
+    if(customerName && customerName != null) {
+        inputNameBox.value = customerName;
+    }
     inputNameBox.addEventListener('keypress', function(e) {
         if(e.key === 'Enter') {
             if(inputNameBox.value) {
                 customerName = inputNameBox.value;
-                if(chosenStage != 'Airlift And Acuair' || chosenStage != 'Send a General Enquiry') {
+                if(chosenStage != 'airliftAndAcuairButton' || chosenStage != 'sendGeneralEnquiryButton') {
                     choseNextStage();
-                } else if(chosenStage == 'Airlift And Acuair') {
+                } else if(chosenStage == 'airliftAndAcuairButton') {
                     enterVehicle();
-                } else if(chosenStage == 'Send a General Enquiry') {
+                } else if(chosenStage == 'sendGeneralEnquiryButton') {
                     getPermission();
                 }
             }
@@ -103,11 +123,12 @@ function getNameStage(button) {
 }
 
 function choseNextStage() {
+    shownSections.push('choseNextStage');
     let chatboxContainer = document.getElementById('chatboxContainer');
 
     clearStageShowText(chatboxContainer, "What stage would you like to choose for your " + chosenStage + ", " + customerName + "?");
 
-    if(chosenStage == 'Detailing') {
+    if(chosenStage == 'detailingButton') {
         let buttonContainer = addElement('div', null, null, 'checkboxContainer', chatboxContainer);
 
         let button1 = addElement('button', null, 'stageButton', null, buttonContainer);
@@ -139,7 +160,7 @@ function choseNextStage() {
         });
     }
 
-    if(chosenStage == 'Paint Correction') {
+    if(chosenStage == 'paintCorrectionButton') {
         let buttonContainer = addElement('div', null, null, 'checkboxContainer', chatboxContainer);
 
         let button1 = addElement('button', null, 'stageButton', null, buttonContainer);
@@ -178,7 +199,7 @@ function choseNextStage() {
         });
     }
 
-    if(chosenStage == 'Ceramic Coatings') {
+    if(chosenStage == 'ceramicCoatingsButtons') {
         let buttonContainer = addElement('div', null, null, 'checkboxContainer', chatboxContainer);
 
         let button1 = addElement('button', null, 'stageButton', null, buttonContainer);
@@ -238,7 +259,7 @@ function choseNextStage() {
         });
     }
 
-    if(chosenStage == 'Wrapping/ PPF/ Tinting') {
+    if(chosenStage == 'wrappingPPFTintingButton') {
         let buttonContainer = addElement('div', null, null, 'checkboxContainer', chatboxContainer);
 
         let button1 = addElement('button', null, 'stageButton', null, buttonContainer);
@@ -277,7 +298,7 @@ function choseNextStage() {
         });
     }
 
-    if(chosenStage == 'Remapping & Performance Parts') {
+    if(chosenStage == 'remappingAndPerformanceButton') {
         let buttonContainer = addElement('div', null, null, 'checkboxContainer', chatboxContainer);
 
         let button1 = addElement('button', null, 'stageButton', null, buttonContainer);
@@ -323,7 +344,7 @@ function choseNextStage() {
         });
     }
 
-    if(chosenStage == 'Servicing and Tyres Button') {
+    if(chosenStage == 'servicingAndTyresButton') {
         let buttonContainer = addElement('div', null, null, 'checkboxContainer', chatboxContainer);
 
         let button1 = addElement('button', null, 'stageButton', null, buttonContainer);
@@ -355,7 +376,7 @@ function choseNextStage() {
         });
     }
 
-    if(chosenStage == 'Accident Repair') {
+    if(chosenStage == 'accidentRepairButton') {
         let buttonContainer = addElement('div', null, null, 'checkboxContainer', chatboxContainer);
 
         let button1 = addElement('button', null, 'stageButton', null, buttonContainer);
@@ -396,12 +417,16 @@ function choseNextStage() {
 }
 
 function enterVehicle() {
+    shownSections.push('enterVehicle')
     let chatboxContainer = document.getElementById('chatboxContainer');
 
     clearStageShowText(chatboxContainer, "Which vehicle?");
 
     // Enter vechicle name
     let inputVechicleBox = addElement('input', 'text', null, 'inputVechicleBox', chatboxContainer);
+    if(vechicleName && vechicleName != null) {
+        inputVechicleBox.value = vechicleName;
+    }
     inputVechicleBox.addEventListener('keypress', function(e) {
         if(e.key === 'Enter') {
             if(inputVechicleBox.value) {
@@ -413,6 +438,7 @@ function enterVehicle() {
 }
 
 function getPermission() {
+    shownSections.push('getPermission');
     let chatboxContainer = document.getElementById('chatboxContainer');
 
     clearStageShowText(chatboxContainer, "By submitting this form, you'll be agreeing to the terms of our privacy policy, Is that ok?");
@@ -424,6 +450,7 @@ function getPermission() {
     yesButton.innerHTML = 'Yes';
     yesButton.addEventListener('click', function() {
         getEmail();
+        acceptedPermission = true;
     });
 
     let noButton = addElement('button', null, 'permissionButton', 'noButton', buttonContainer);
@@ -437,12 +464,16 @@ function getPermission() {
 }
 
 function getEmail() {
+    shownSections.push('getEmail');
     let chatboxContainer = document.getElementById('chatboxContainer');
 
     clearStageShowText(chatboxContainer, "What's the best email address for you, " + customerName + "?");
 
     // Enter email
     let inputEmailBox = addElement('input', 'email', null, 'inputEmailBox', chatboxContainer);
+    if(customerEmail && customerEmail != null) {
+        inputEmailBox.value = customerEmail;
+    }
     inputEmailBox.addEventListener('keypress', function(e) {
         if(e.key === 'Enter') {
             if(inputEmailBox.value) {
@@ -454,12 +485,16 @@ function getEmail() {
 }
 
 function getNumber() {
+    shownSections.push('getNumber');
     let chatboxContainer = document.getElementById('chatboxContainer');
     
     clearStageShowText(chatboxContainer, "and the best number to reach you on?");
 
     // Enter number
     let inputNumberBox = addElement('input', 'tel', null, 'inputNumberBox', chatboxContainer);
+    if(customerNumber && customerNumber != null) {
+        inputNumberBox.value = customerNumber;
+    }
     inputNumberBox.addEventListener('keypress', function(e) {
         if(e.key === 'Enter') {
             if(inputNumberBox.value) {
@@ -471,6 +506,7 @@ function getNumber() {
 }
 
 function getEnquiry() {
+    shownSections.push('getEnquiry');
     let chatboxContainer = document.getElementById('chatboxContainer');
     
     clearStageShowText(chatboxContainer, "Please fill in the details of your enquiry below");
@@ -488,14 +524,58 @@ function getEnquiry() {
 }
 
 function submitEnquiry() {
+    if(document.getElementById('backButton')) {
+        document.getElementById('backButton').style.display = 'none';
+    }
+    if(document.getElementById('resetButton')) {
+        document.getElementById('resetButton').style.display = 'none';
+    }
+
     let chatboxContainer = document.getElementById('chatboxContainer');
     
-    clearStageShowText(chatboxContainer, "Thanks for you patience, name. A member of the team will be in touch with you shortly. Have a nice day :D");
+    clearStageShowText(chatboxContainer, "Thanks for you patience, " + customerName + ". A member of the team will be in touch with you shortly. Have a nice day :D");
 
     //Send details for email
-    console.log(customerName, chosenStage, vechicleName, customerEmail, customerNumber, customerEnquiry);
+    let enquiry = {
+        'customerName': customerName,
+        'chosenStage': chosenStage,
+        'vechicleName': vechicleName,
+        'customerEmail': customerEmail,
+        'customerNumber': customerNumber,
+        'customerEnquiry': customerEnquiry
+    }
+    console.log(enquiry);
 }
 
+function backForm() {
+    if(shownSections.length > 1) {
+        shownSections.pop();
+        let sectionToShow = shownSections.slice(-1)[0]
+        let fn = window[sectionToShow];
+
+        if(typeof fn === 'function') {
+            shownSections.pop();
+            fn.apply();
+        }
+    }
+
+}
+
+function resetForm() {
+    while(chatboxContainer.firstChild) {
+        chatboxContainer.removeChild(chatboxContainer.lastChild);
+    }
+
+    welcomeStage();
+
+    customerName = "";
+    chosenStage = "";
+    optionStage = "";
+    vechicleName = "";
+    customerEmail = "";
+    customerNumber;
+    customerEnquiry = "";
+}
 
 // ------ Helper Functions ------
 function addElement(div, type, className, id, appendTo) {
